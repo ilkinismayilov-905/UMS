@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: LLM
+  datasource:
+    url: jdbc:mysql://213.199.37.210:3306/llm?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: user
+    password: LlmUser123!
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
