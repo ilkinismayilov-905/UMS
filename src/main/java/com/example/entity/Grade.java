@@ -4,20 +4,17 @@ import com.example.enums.GradeStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(uniqueConstraints =  @UniqueConstraint(columnNames = {
         "student_id", "subject_id"
 }))
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Grade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

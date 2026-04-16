@@ -1,22 +1,15 @@
 package com.example.entity;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-
-@Entity
-@Table(name = "teacher_group_subject",
-uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"teacher_id","group_id","subject_id"})
-})
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "teacher_group_subjects",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"teacher_id", "group_id", "subject_id"}))
 public class TeacherGroupSubject {
 
     @Id
@@ -25,15 +18,19 @@ public class TeacherGroupSubject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Teacher teacher;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Subject subject;
-
-
 }
