@@ -2,9 +2,11 @@ package com.example.repository;
 
 import com.example.entity.TeacherGroupSubject;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TeacherGroupSubjectRepository extends JpaRepository<TeacherGroupSubject, Long> {
 
     boolean existsByTeacherIdAndGroupIdAndSubjectId(Long teacherId, Long groupId, Long subjectId);
