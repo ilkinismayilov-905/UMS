@@ -5,6 +5,7 @@ import com.example.dto.request.MarkAttendanceRequest;
 import com.example.dto.response.AttendanceResponse;
 import com.example.dto.response.AttendanceWarningResponse;
 import com.example.entity.*;
+import com.example.enums.Role;
 import com.example.exception.*;
 import com.example.repository.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,8 +43,7 @@ class AttendanceServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private TeacherGroupSubjectRepository tgsRepository;
+    // ...existing code...
 
     @Mock
     private EntityToDtoMapper mapper;
@@ -68,7 +68,7 @@ class AttendanceServiceTest {
                 .password("encoded")
                 .firstName("John")
                 .lastName("Doe")
-                .role(Role.TEACHER)
+                .role(Role.ROLE_TEACHER)
                 .isActive(true)
                 .build();
 
@@ -102,7 +102,7 @@ class AttendanceServiceTest {
                 .password("encoded")
                 .firstName("Jane")
                 .lastName("Smith")
-                .role(Role.STUDENT)
+                .role(Role.ROLE_STUDENT)
                 .isActive(true)
                 .build();
 
@@ -172,14 +172,12 @@ class AttendanceServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertTrue(result instanceof AttendanceResponse);
+        assertInstanceOf(AttendanceResponse.class, result);
         verify(attendanceRepository, times(1)).save(any(Attendance.class));
     }
 
     @Test
     void shouldThrowExceptionWhenLessonInactive() {
-        // Arrange
-        mockAuthenticatedTeacher();
         Lesson inactiveLessonz = lesson;
         inactiveLessonz.setActive(false);
 
@@ -197,8 +195,6 @@ class AttendanceServiceTest {
 
     @Test
     void shouldThrowExceptionWhenStudentNotFound() {
-        // Arrange
-        mockAuthenticatedTeacher();
         MarkAttendanceRequest request = MarkAttendanceRequest.builder()
                 .lessonId(1L)
                 .studentId(999L)
@@ -208,7 +204,6 @@ class AttendanceServiceTest {
         when(lessonRepository.findByIdAndIsActiveTrue(1L)).thenReturn(Optional.of(lesson));
         when(studentRepository.findById(999L)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(StudentNotFoundException.class, () -> attendanceService.markAttendance(request));
     }
 
@@ -349,7 +344,7 @@ class AttendanceServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertTrue(result instanceof AttendanceResponse);
+        assertInstanceOf(AttendanceResponse.class, result);
         verify(attendanceRepository, times(1)).save(any(Attendance.class));
     }
 
@@ -392,12 +387,12 @@ class AttendanceServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertTrue(result instanceof AttendanceWarningResponse);
+        assertInstanceOf(AttendanceWarningResponse.class, result);
         AttendanceWarningResponse warning = (AttendanceWarningResponse) result;
-        assertTrue(warning.isWarning());
-        assertTrue(warning.getMessage().contains("15 minutes"));
-        assertEquals("ABSENT", warning.getCurrentStatus());
-        assertEquals("PRESENT", warning.getRequestedStatus());
+        assertTrue(warning.warning());
+        assertTrue(warning.message().contains("15 minutes"));
+        assertEquals("ABSENT", warning.currentStatus());
+        assertEquals("PRESENT", warning.requestedStatus());
         verify(attendanceRepository, never()).save(any(Attendance.class));
     }
 

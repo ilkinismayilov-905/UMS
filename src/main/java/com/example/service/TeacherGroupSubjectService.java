@@ -63,16 +63,16 @@ public class TeacherGroupSubjectService {
     public TeacherGroupSubjectResponse createTeacherGroupSubject(CreateTeacherGroupSubjectRequest request) {
         log.info("Creating new teacher group subject assignment");
 
-        Teacher teacher = teacherRepository.findById(request.getTeacherId())
-                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + request.getTeacherId()));
+        Teacher teacher = teacherRepository.findById(request.teacherId())
+                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + request.teacherId()));
 
-        Group group = groupRepository.findById(request.getGroupId())
-                .orElseThrow(() -> new GroupNotFoundException("Group not found with id: " + request.getGroupId()));
+        Group group = groupRepository.findById(request.groupId())
+                .orElseThrow(() -> new GroupNotFoundException("Group not found with id: " + request.groupId()));
 
-        Subject subject = subjectRepository.findById(request.getSubjectId())
-                .orElseThrow(() -> new SubjectNotFoundException("Subject not found with id: " + request.getSubjectId()));
+        Subject subject = subjectRepository.findById(request.subjectId())
+                .orElseThrow(() -> new SubjectNotFoundException("Subject not found with id: " + request.subjectId()));
 
-        if (tgsRepository.existsByTeacherIdAndGroupIdAndSubjectId(request.getTeacherId(), request.getGroupId(), request.getSubjectId())) {
+        if (tgsRepository.existsByTeacherIdAndGroupIdAndSubjectId(request.teacherId(), request.groupId(), request.subjectId())) {
             throw new InvalidInputException("Teacher group subject assignment already exists");
         }
 

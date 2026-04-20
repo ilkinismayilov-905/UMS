@@ -1,22 +1,13 @@
 package com.example.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class StudentResponse {
-
-    private Long id;
-
-    private String studentNumber;
-
-    private UserResponse user;
-
-    private GroupResponse group;
+public record StudentResponse(
+    Long id,
+    String studentNumber,
+    UserResponse user,
+    GroupResponse group
+) {
 }
 

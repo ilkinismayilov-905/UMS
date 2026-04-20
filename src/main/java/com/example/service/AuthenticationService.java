@@ -32,40 +32,40 @@ public class AuthenticationService {
     private final EntityToDtoMapper mapper;
 
     public LoginResponse login(LoginRequest request) {
-        log.info("Attempting login for email: {}", request.getEmail());
+        log.info("Attempting login for email: {}", request.email());
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
 
         String token = jwtTokenProvider.generateToken(authentication);
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserResponse userResponse = mapper.toUserResponse(user);
 
-        log.info("User logged in successfully: {}", request.getEmail());
+        log.info("User logged in successfully: {}", request.email());
         return LoginResponse.of(token, userResponse);
     }
 
     public LoginResponse register(RegisterRequest request) {
-        log.info("Attempting registration for email: {}", request.getEmail());
+        log.info("Attempting registration for email: {}", request.email());
 
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateUserException("User already exists with email: " + request.getEmail());
+        if (userRepository.existsByEmail(request.email())) {
+            throw new DuplicateUserException("User already exists with email: " + request.email());
         }
 
         User user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .role(Role.valueOf(request.getRole().toUpperCase()))
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .role(Role.valueOf(request.role().toUpperCase()))
                 .isActive(true)
                 .build();
 
         User savedUser = userRepository.save(user);
-        log.info("User registered successfully: {}", request.getEmail());
+        log.info("User registered successfully: {}", request.email());
 
         String token = jwtTokenProvider.generateTokenFromEmail(savedUser.getEmail());
         UserResponse userResponse = mapper.toUserResponse(savedUser);

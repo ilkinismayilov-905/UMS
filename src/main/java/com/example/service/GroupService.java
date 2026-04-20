@@ -64,12 +64,15 @@ public class GroupService {
 
     public GroupResponse createGroup(CreateGroupRequest request) {
         log.info("Creating new group");
+        if (groupRepository.existsByGroupNumber(request.groupNumber())) {
+            throw new InvalidInputException("Group with number " + request.groupNumber() + " already exists");
+        }
 
-        Specialty specialty = specialtyRepository.findById(request.getSpecialtyId())
-                .orElseThrow(() -> new SpecialtyNotFoundException("Specialty not found with id: " + request.getSpecialtyId()));
+        Specialty specialty = specialtyRepository.findById(request.specialtyId())
+                .orElseThrow(() -> new SpecialtyNotFoundException("Specialty not found with id: " + request.specialtyId()));
 
         Group group = Group.builder()
-                .groupNumber(request.getGroupNumber())
+                .groupNumber(request.groupNumber())
                 .specialty(specialty)
                 .build();
 
@@ -85,8 +88,8 @@ public class GroupService {
         Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException("Group not found with id: " + id));
 
-        Specialty specialty = specialtyRepository.findById(request.getSpecialtyId())
-                .orElseThrow(() -> new SpecialtyNotFoundException("Specialty not found with id: " + request.getSpecialtyId()));
+        Specialty specialty = specialtyRepository.findById(request.specialtyId())
+                .orElseThrow(() -> new SpecialtyNotFoundException("Specialty not found with id: " + request.specialtyId()));
 
         group.setSpecialty(specialty);
 

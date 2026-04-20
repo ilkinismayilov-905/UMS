@@ -5,6 +5,7 @@ import com.example.dto.request.CreateStudentRequest;
 import com.example.dto.request.UpdateStudentRequest;
 import com.example.dto.response.StudentResponse;
 import com.example.entity.*;
+import com.example.enums.Role;
 import com.example.exception.*;
 import com.example.repository.GroupRepository;
 import com.example.repository.StudentRepository;
@@ -54,7 +55,7 @@ class StudentServiceTest {
                 .email("student@school.com")
                 .firstName("John")
                 .lastName("Doe")
-                .role(Role.STUDENT)
+                .role(Role.ROLE_STUDENT)
                 .build();
 
         group = Group.builder()
@@ -102,7 +103,7 @@ class StudentServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(studentResponse.getStudentNumber(), result.getStudentNumber());
+        assertEquals(studentResponse.studentNumber(), result.studentNumber());
         verify(studentRepository, times(1)).findById(1L);
     }
 
@@ -126,7 +127,7 @@ class StudentServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(studentResponse.getStudentNumber(), result.getStudentNumber());
+        assertEquals(studentResponse.studentNumber(), result.studentNumber());
     }
 
     @Test
@@ -149,7 +150,7 @@ class StudentServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(studentResponse.getStudentNumber(), result.getStudentNumber());
+        assertEquals(studentResponse.studentNumber(), result.studentNumber());
         verify(studentRepository, times(1)).save(any(Student.class));
     }
 
@@ -163,6 +164,7 @@ class StudentServiceTest {
                 .build();
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
         when(studentRepository.existsByStudentNumber("STU001")).thenReturn(true);
 
         // Act & Assert
@@ -195,11 +197,12 @@ class StudentServiceTest {
                 .build();
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(studentRepository.existsByStudentNumber("STU001")).thenReturn(false);
         when(groupRepository.findById(999L)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(GroupNotFoundException.class, () -> studentService.createStudent(request));
+
+        verify(studentRepository, never()).existsByStudentNumber(anyString());
     }
 
     @Test

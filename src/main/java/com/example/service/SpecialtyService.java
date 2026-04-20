@@ -52,12 +52,12 @@ public class SpecialtyService {
     public SpecialtyResponse createSpecialty(CreateSpecialtyRequest request) {
         log.info("Creating new specialty");
 
-        if (specialtyRepository.existsByName(request.getName())) {
-            throw new DuplicateUserException("Specialty already exists with name: " + request.getName());
+        if (specialtyRepository.existsByName(request.name())) {
+            throw new DuplicateUserException("Specialty already exists with name: " + request.name());
         }
 
         Specialty specialty = Specialty.builder()
-                .name(request.getName())
+                .name(request.name())
                 .build();
 
         Specialty savedSpecialty = specialtyRepository.save(specialty);
@@ -72,11 +72,11 @@ public class SpecialtyService {
         Specialty specialty = specialtyRepository.findById(id)
                 .orElseThrow(() -> new SpecialtyNotFoundException("Specialty not found with id: " + id));
 
-        if (!specialty.getName().equals(request.getName()) && specialtyRepository.existsByName(request.getName())) {
-            throw new DuplicateUserException("Specialty already exists with name: " + request.getName());
+        if (!specialty.getName().equals(request.name()) && specialtyRepository.existsByName(request.name())) {
+            throw new DuplicateUserException("Specialty already exists with name: " + request.name());
         }
 
-        specialty.setName(request.getName());
+        specialty.setName(request.name());
 
         Specialty updatedSpecialty = specialtyRepository.save(specialty);
         log.info("Specialty updated successfully with id: {}", updatedSpecialty.getId());

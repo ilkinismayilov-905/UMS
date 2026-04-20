@@ -47,15 +47,15 @@ public class AttendanceService {
      * 8. If lesson not started yet, no changes allowed
      */
     public Object markAttendance(MarkAttendanceRequest request) {
-        log.info("Marking attendance for student id: {} in lesson id: {}", request.getStudentId(), request.getLessonId());
+        log.info("Marking attendance for student id: {} in lesson id: {}", request.studentId(), request.lessonId());
 
         // Validate lesson exists and is active
-        Lesson lesson = lessonRepository.findByIdAndIsActiveTrue(request.getLessonId())
+        Lesson lesson = lessonRepository.findByIdAndIsActiveTrue(request.lessonId())
                 .orElseThrow(() -> new InvalidInputException("Lesson not found or is inactive"));
 
         // Validate student exists
-        Student student = studentRepository.findById(request.getStudentId())
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + request.getStudentId()));
+        Student student = studentRepository.findById(request.studentId())
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + request.studentId()));
 
         // Verify teacher authorization
         Teacher teacher = getAuthenticatedTeacher();
@@ -81,12 +81,12 @@ public class AttendanceService {
             attendance = Attendance.builder()
                     .lesson(lesson)
                     .student(student)
-                    .status(mapRequestStatusToEntity(request.getStatus()))
-                    .remarks(request.getRemarks())
+                    .status(mapRequestStatusToEntity(request.status()))
+                    .remarks(request.remarks())
                     .build();
 
             Attendance savedAttendance = attendanceRepository.save(attendance);
-            log.info("Attendance marked for student id: {} as: {}", request.getStudentId(), request.getStatus());
+            log.info("Attendance marked for student id: {} as: {}", request.studentId(), request.status());
             return mapper.toAttendanceResponse(savedAttendance);
         }
 
@@ -100,7 +100,7 @@ public class AttendanceService {
     private Object handleAttendanceUpdate(Attendance attendance, MarkAttendanceRequest request, 
                                          Lesson lesson, LocalDateTime now) {
         
-        Attendance.AttendanceStatus newStatus = mapRequestStatusToEntity(request.getStatus());
+        Attendance.AttendanceStatus newStatus = mapRequestStatusToEntity(request.status());
         Attendance.AttendanceStatus currentStatus = attendance.getStatus();
 
         // If changing from ABSENT to PRESENT
@@ -113,19 +113,19 @@ public class AttendanceService {
                         attendance.getStudent().getId());
                 
                 // Return warning response instead of throwing exception
-                return AttendanceWarningResponse.builder()
-                        .warning(true)
-                        .message("Cannot change ABSENT to PRESENT after 15 minutes of lesson start")
-                        .currentStatus(currentStatus.name())
-                        .requestedStatus(newStatus.name())
-                        .attendanceId(attendance.getId())
-                        .build();
+                return new AttendanceWarningResponse(
+                        true,
+                        "Cannot change ABSENT to PRESENT after 15 minutes of lesson start",
+                        currentStatus.name(),
+                        newStatus.name(),
+                        attendance.getId()
+                );
             }
         }
 
         // Update attendance
         attendance.setStatus(newStatus);
-        attendance.setRemarks(request.getRemarks());
+        attendance.setRemarks(request.remarks());
         Attendance updatedAttendance = attendanceRepository.save(attendance);
 
         log.info("Attendance updated for student id: {} to: {}", 

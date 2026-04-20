@@ -2,26 +2,20 @@ package com.example.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class MarkAttendanceRequest {
-
+public record MarkAttendanceRequest(
     @NotNull(message = "Lesson ID cannot be null")
-    private Long lessonId;
+    Long lessonId,
 
     @NotNull(message = "Student ID cannot be null")
-    private Long studentId;
+    Long studentId,
 
     @NotBlank(message = "Status cannot be blank (PRESENT, ABSENT)")
-    private String status;
+    String status,
 
-    private String remarks;
+    String remarks
+) {
 }
 

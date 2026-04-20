@@ -3,7 +3,7 @@ package com.example.service;
 import com.example.dto.mapper.EntityToDtoMapper;
 import com.example.dto.request.CreateGradeRequest;
 import com.example.dto.request.UpdateGradeRequest;
-import com.example.dto.response.GradeResponse;
+import com.example.dto.response.*;
 import com.example.entity.*;
 import com.example.enums.GradeStatus;
 import com.example.enums.Role;
@@ -49,7 +49,17 @@ class GradeServiceTest {
     private Student student;
     private Subject subject;
     private Teacher teacher;
+    private SpecialtyResponse specialtyRes;
     private GradeResponse gradeResponse;
+    private UserResponse studentUserRes;
+    private UserResponse teacherUserRes;
+    private GroupResponse groupRes;
+    private StudentResponse studentRes;
+    private TeacherResponse teacherRes;
+    private SubjectResponse subjectRes;
+
+
+
 
     @BeforeEach
     void setUp() {
@@ -102,13 +112,65 @@ class GradeServiceTest {
                 .status(GradeStatus.PASSED)
                 .build();
 
+        specialtyRes = new SpecialtyResponse(1L, "Software Engineering");
+
+        GroupResponse groupRes = GroupResponse.builder()
+                .id(1L)
+                .groupNumber("601.21")
+                .specialty(specialtyRes)
+                .build();
+
+        studentUserRes = UserResponse.builder()
+                .id(1L)
+                .email("student@school.com")
+                .firstName("John")
+                .lastName("Doe")
+                .role("ROLE_STUDENT")
+                .isActive(true)
+                .build();
+
+        studentRes = StudentResponse.builder()
+                .id(1L)
+                .studentNumber("STU001")
+                .user(studentUserRes)
+                .group(groupRes)
+                .build();
+
+        teacherUserRes = UserResponse.builder()
+                .id(2L)
+                .email("teacher@school.com")
+                .firstName("Jane")
+                .lastName("Smith")
+                .role("ROLE_TEACHER")
+                .isActive(true)
+                .build();
+
+
+        teacherRes = TeacherResponse.builder()
+                .id(1L)
+                .user(teacherUserRes)
+                .department("Computer Science")
+                .build();
+
+        subjectRes = SubjectResponse.builder()
+                .id(1L)
+                .name("Advanced Java")
+                .credits(4)
+                .build();
+
         gradeResponse = GradeResponse.builder()
                 .id(1L)
-                .studentId(1L)
-                .subjectId(1L)
-                .teacherId(1L)
+                .student(studentRes)   // Artıq Long yox, tam obyekt
+                .subject(subjectRes)   // Artıq subjectId yox, subject obyekti
+                .teacher(teacherRes)   // Artıq teacherId yox, teacher obyekti
+                .attendanceScore(8)
+                .seminarScore(7)
+                .col1(6)
+                .col2(7)
+                .col3(8)
+                .examScore(35)
                 .totalScore(71)
-                .status("EXCELLENT")
+                .status("PASSED")
                 .build();
     }
 
@@ -123,7 +185,7 @@ class GradeServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(71, result.getTotalScore());
+        assertEquals(71, result.totalScore());
         verify(gradeRepository, times(1)).findById(1L);
     }
 
@@ -196,8 +258,8 @@ class GradeServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(71, result.getTotalScore());
-        assertEquals("EXCELLENT", result.getStatus());
+        assertEquals(71, result.totalScore());
+        assertEquals("PASSED", result.status());
         verify(gradeRepository, times(1)).save(any(Grade.class));
     }
 
@@ -247,8 +309,8 @@ class GradeServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(51, result.getTotalScore());
-        assertEquals("GOOD", result.getStatus());
+        assertEquals(51, result.totalScore());
+        assertEquals("GOOD", result.status());
     }
 
     @Test
@@ -297,8 +359,8 @@ class GradeServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(40, result.getTotalScore());
-        assertEquals("SATISFACTORY", result.getStatus());
+        assertEquals(40, result.totalScore());
+        assertEquals("SATISFACTORY", result.status());
     }
 
     @Test
@@ -328,7 +390,7 @@ class GradeServiceTest {
                 .col3(2)
                 .examScore(10)
                 .totalScore(20)
-                .status(GradeStatus.FAIL)
+                .status(GradeStatus.FAILED_BY_EXAM)
                 .build();
 
         GradeResponse failResponse = GradeResponse.builder()
@@ -347,8 +409,8 @@ class GradeServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(20, result.getTotalScore());
-        assertEquals("FAIL", result.getStatus());
+        assertEquals(20, result.totalScore());
+        assertEquals("FAIL", result.status());
     }
 
     @Test
@@ -487,7 +549,7 @@ class GradeServiceTest {
                 .col3(9)
                 .examScore(37)
                 .totalScore(78)
-                .status(GradeStatus.EXCELLENT)
+                .status(GradeStatus.PASSED)
                 .build();
 
         GradeResponse updatedResponse = GradeResponse.builder()
@@ -504,7 +566,7 @@ class GradeServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(78, result.getTotalScore());
+        assertEquals(78, result.totalScore());
         verify(gradeRepository, times(1)).save(any(Grade.class));
     }
 

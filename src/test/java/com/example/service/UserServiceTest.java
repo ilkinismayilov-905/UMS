@@ -53,26 +53,26 @@ class UserServiceTest {
                 .password("encodedPassword123")
                 .firstName("John")
                 .lastName("Doe")
-                .role(Role.TEACHER)
+                .role(Role.ROLE_TEACHER)
                 .isActive(true)
                 .build();
 
-        createUserRequest = CreateUserRequest.builder()
-                .email("test@school.com")
-                .password("PlainPassword123")
-                .firstName("John")
-                .lastName("Doe")
-                .role("TEACHER")
-                .build();
+        createUserRequest = new CreateUserRequest(
+                "test@school.com",
+                "PlainPassword123",
+                "John",
+                "Doe",
+                "ROLE_TEACHER"
+        );
 
-        userResponse = UserResponse.builder()
-                .id(1L)
-                .email("test@school.com")
-                .firstName("John")
-                .lastName("Doe")
-                .role("TEACHER")
-                .isActive(true)
-                .build();
+        userResponse = new UserResponse(
+                1L,
+                "test@school.com",
+                "John",
+                "Doe",
+                "ROLE_TEACHER",
+                true
+        );
     }
 
     @Test
@@ -89,7 +89,7 @@ class UserServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(userResponse.getEmail(), result.get(0).getEmail());
+        assertEquals(userResponse.email(), result.get(0).email());
         verify(userRepository, times(1)).findAll();
     }
 
@@ -104,7 +104,7 @@ class UserServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(userResponse.getEmail(), result.getEmail());
+        assertEquals(userResponse.email(), result.email());
         verify(userRepository, times(1)).findById(1L);
     }
 
@@ -121,8 +121,8 @@ class UserServiceTest {
     @Test
     void shouldCreateUserSuccessfully() {
         // Arrange
-        when(userRepository.existsByEmail(createUserRequest.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(createUserRequest.getPassword())).thenReturn("encodedPassword123");
+        when(userRepository.existsByEmail(createUserRequest.email())).thenReturn(false);
+        when(passwordEncoder.encode(createUserRequest.password())).thenReturn("encodedPassword123");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
         when(mapper.toUserResponse(testUser)).thenReturn(userResponse);
 
@@ -131,20 +131,20 @@ class UserServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(userResponse.getEmail(), result.getEmail());
-        verify(userRepository, times(1)).existsByEmail(createUserRequest.getEmail());
+        assertEquals(userResponse.email(), result.email());
+        verify(userRepository, times(1)).existsByEmail(createUserRequest.email());
         verify(userRepository, times(1)).save(any(User.class));
-        verify(passwordEncoder, times(1)).encode(createUserRequest.getPassword());
+        verify(passwordEncoder, times(1)).encode(createUserRequest.password());
     }
 
     @Test
     void shouldThrowDuplicateUserExceptionWhenEmailAlreadyExists() {
         // Arrange
-        when(userRepository.existsByEmail(createUserRequest.getEmail())).thenReturn(true);
+        when(userRepository.existsByEmail(createUserRequest.email())).thenReturn(true);
 
         // Act & Assert
         assertThrows(DuplicateUserException.class, () -> userService.createUser(createUserRequest));
-        verify(userRepository, times(1)).existsByEmail(createUserRequest.getEmail());
+        verify(userRepository, times(1)).existsByEmail(createUserRequest.email());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -154,7 +154,6 @@ class UserServiceTest {
         UpdateUserRequest updateRequest = UpdateUserRequest.builder()
                 .firstName("Jane")
                 .lastName("Smith")
-                .role("STUDENT")
                 .build();
 
         User updatedUser = User.builder()
@@ -163,7 +162,7 @@ class UserServiceTest {
                 .password("encodedPassword123")
                 .firstName("Jane")
                 .lastName("Smith")
-                .role(Role.STUDENT)
+                .role(Role.ROLE_STUDENT)
                 .isActive(true)
                 .build();
 
@@ -185,8 +184,8 @@ class UserServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals("Jane", result.getFirstName());
-        assertEquals("STUDENT", result.getRole());
+        assertEquals("Jane", result.firstName());
+        assertEquals("STUDENT", result.role());
         verify(userRepository, times(1)).findById(1L);
         verify(userRepository, times(1)).save(any(User.class));
     }
@@ -240,7 +239,7 @@ class UserServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(userResponse.getEmail(), result.getEmail());
+        assertEquals(userResponse.email(), result.email());
         verify(userRepository, times(1)).findByEmail("test@school.com");
     }
 

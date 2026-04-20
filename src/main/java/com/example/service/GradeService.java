@@ -74,14 +74,14 @@ public class GradeService {
     public GradeResponse createGrade(CreateGradeRequest request) {
         log.info("Creating new grade");
 
-        Student student = studentRepository.findById(request.getStudentId())
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + request.getStudentId()));
+        Student student = studentRepository.findById(request.studentId())
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + request.studentId()));
 
-        Subject subject = subjectRepository.findById(request.getSubjectId())
-                .orElseThrow(() -> new SubjectNotFoundException("Subject not found with id: " + request.getSubjectId()));
+        Subject subject = subjectRepository.findById(request.subjectId())
+                .orElseThrow(() -> new SubjectNotFoundException("Subject not found with id: " + request.subjectId()));
 
-        Teacher teacher = teacherRepository.findById(request.getTeacherId())
-                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + request.getTeacherId()));
+        Teacher teacher = teacherRepository.findById(request.teacherId())
+                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + request.teacherId()));
 
         validateGradeValues(request);
 
@@ -89,12 +89,12 @@ public class GradeService {
         grade.setStudent(student);
         grade.setSubject(subject);
         grade.setTeacher(teacher);
-        grade.setAttendanceScore(request.getAttendanceScore());
-        grade.setSeminarScore(request.getSeminarScore());
-        grade.setCol1(request.getCol1());
-        grade.setCol2(request.getCol2());
-        grade.setCol3(request.getCol3());
-        grade.setExamScore(request.getExamScore());
+        grade.setAttendanceScore(request.attendanceScore());
+        grade.setSeminarScore(request.seminarScore());
+        grade.setCol1(request.col1());
+        grade.setCol2(request.col2());
+        grade.setCol3(request.col3());
+        grade.setExamScore(request.examScore());
 
         int totalScore = calculateTotalScore(request);
         grade.setTotalScore(totalScore);
@@ -114,23 +114,23 @@ public class GradeService {
 
         validateGradeValues(request);
 
-        if (request.getAttendanceScore() != null) {
-            grade.setAttendanceScore(request.getAttendanceScore());
+        if (request.attendanceScore() != null) {
+            grade.setAttendanceScore(request.attendanceScore());
         }
-        if (request.getSeminarScore() != null) {
-            grade.setSeminarScore(request.getSeminarScore());
+        if (request.seminarScore() != null) {
+            grade.setSeminarScore(request.seminarScore());
         }
-        if (request.getCol1() != null) {
-            grade.setCol1(request.getCol1());
+        if (request.col1() != null) {
+            grade.setCol1(request.col1());
         }
-        if (request.getCol2() != null) {
-            grade.setCol2(request.getCol2());
+        if (request.col2() != null) {
+            grade.setCol2(request.col2());
         }
-        if (request.getCol3() != null) {
-            grade.setCol3(request.getCol3());
+        if (request.col3() != null) {
+            grade.setCol3(request.col3());
         }
-        if (request.getExamScore() != null) {
-            grade.setExamScore(request.getExamScore());
+        if (request.examScore() != null) {
+            grade.setExamScore(request.examScore());
         }
 
         int totalScore = calculateTotalScore(grade);
@@ -155,35 +155,35 @@ public class GradeService {
     }
 
     private void validateGradeValues(CreateGradeRequest request) {
-        if ((request.getAttendanceScore() != null && (request.getAttendanceScore() < 0 || request.getAttendanceScore() > 10)) ||
-                (request.getSeminarScore() != null && (request.getSeminarScore() < 0 || request.getSeminarScore() > 10)) ||
-                (request.getCol1() != null && (request.getCol1() < 0 || request.getCol1() > 10)) ||
-                (request.getCol2() != null && (request.getCol2() < 0 || request.getCol2() > 10)) ||
-                (request.getCol3() != null && (request.getCol3() < 0 || request.getCol3() > 10)) ||
-                (request.getExamScore() != null && (request.getExamScore() < 0 || request.getExamScore() > 50))) {
+        if ((request.attendanceScore() != null && (request.attendanceScore() < 0 || request.attendanceScore() > 10)) ||
+                (request.seminarScore() != null && (request.seminarScore() < 0 || request.seminarScore() > 10)) ||
+                (request.col1() != null && (request.col1() < 0 || request.col1() > 10)) ||
+                (request.col2() != null && (request.col2() < 0 || request.col2() > 10)) ||
+                (request.col3() != null && (request.col3() < 0 || request.col3() > 10)) ||
+                (request.examScore() != null && (request.examScore() < 0 || request.examScore() > 50))) {
             throw new InvalidGradeValueException("Invalid grade value. Scores must be within allowed ranges.");
         }
     }
 
     private void validateGradeValues(UpdateGradeRequest request) {
-        if ((request.getAttendanceScore() != null && (request.getAttendanceScore() < 0 || request.getAttendanceScore() > 10)) ||
-                (request.getSeminarScore() != null && (request.getSeminarScore() < 0 || request.getSeminarScore() > 10)) ||
-                (request.getCol1() != null && (request.getCol1() < 0 || request.getCol1() > 10)) ||
-                (request.getCol2() != null && (request.getCol2() < 0 || request.getCol2() > 10)) ||
-                (request.getCol3() != null && (request.getCol3() < 0 || request.getCol3() > 10)) ||
-                (request.getExamScore() != null && (request.getExamScore() < 0 || request.getExamScore() > 50))) {
+        if ((request.attendanceScore() != null && (request.attendanceScore() < 0 || request.attendanceScore() > 10)) ||
+                (request.seminarScore() != null && (request.seminarScore() < 0 || request.seminarScore() > 10)) ||
+                (request.col1() != null && (request.col1() < 0 || request.col1() > 10)) ||
+                (request.col2() != null && (request.col2() < 0 || request.col2() > 10)) ||
+                (request.col3() != null && (request.col3() < 0 || request.col3() > 10)) ||
+                (request.examScore() != null && (request.examScore() < 0 || request.examScore() > 50))) {
             throw new InvalidGradeValueException("Invalid grade value. Scores must be within allowed ranges.");
         }
     }
 
     private int calculateTotalScore(CreateGradeRequest request) {
         int total = 0;
-        if (request.getAttendanceScore() != null) total += request.getAttendanceScore();
-        if (request.getSeminarScore() != null) total += request.getSeminarScore();
-        if (request.getCol1() != null) total += request.getCol1();
-        if (request.getCol2() != null) total += request.getCol2();
-        if (request.getCol3() != null) total += request.getCol3();
-        if (request.getExamScore() != null) total += request.getExamScore();
+        if (request.attendanceScore() != null) total += request.attendanceScore();
+        if (request.seminarScore() != null) total += request.seminarScore();
+        if (request.col1() != null) total += request.col1();
+        if (request.col2() != null) total += request.col2();
+        if (request.col3() != null) total += request.col3();
+        if (request.examScore() != null) total += request.examScore();
         return total;
     }
 

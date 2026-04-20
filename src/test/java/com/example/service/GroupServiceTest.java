@@ -78,7 +78,7 @@ class GroupServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(groupResponse.getGroupNumber(), result.get(0).getGroupNumber());
+        assertEquals(groupResponse.groupNumber(), result.get(0).groupNumber());
         verify(groupRepository, times(1)).findAll();
     }
 
@@ -93,7 +93,7 @@ class GroupServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(groupResponse.getGroupNumber(), result.getGroupNumber());
+        assertEquals(groupResponse.groupNumber(), result.groupNumber());
         verify(groupRepository, times(1)).findById(1L);
     }
 
@@ -117,7 +117,7 @@ class GroupServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(groupResponse.getGroupNumber(), result.getGroupNumber());
+        assertEquals(groupResponse.groupNumber(), result.groupNumber());
         verify(groupRepository, times(1)).findByGroupNumber("CS-101");
     }
 
@@ -129,8 +129,8 @@ class GroupServiceTest {
                 .specialtyId(1L)
                 .build();
 
-        when(groupRepository.existsByGroupNumber("CS-101")).thenReturn(false);
         when(specialtyRepository.findById(1L)).thenReturn(Optional.of(specialty));
+        when(groupRepository.existsByGroupNumber("CS-101")).thenReturn(false);
         when(groupRepository.save(any(Group.class))).thenReturn(group);
         when(mapper.toGroupResponse(group)).thenReturn(groupResponse);
 
@@ -139,7 +139,7 @@ class GroupServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(groupResponse.getGroupNumber(), result.getGroupNumber());
+        assertEquals(groupResponse.groupNumber(), result.groupNumber());
         verify(groupRepository, times(1)).save(any(Group.class));
     }
 
@@ -152,6 +152,8 @@ class GroupServiceTest {
                 .build();
 
         when(groupRepository.existsByGroupNumber("CS-101")).thenReturn(true);
+
+//        when(specialtyRepository.findById(1L)).thenReturn(Optional.of(specialty));
 
         // Act & Assert
         assertThrows(InvalidInputException.class, () -> groupService.createGroup(request));
@@ -166,8 +168,9 @@ class GroupServiceTest {
                 .specialtyId(999L)
                 .build();
 
-        when(groupRepository.existsByGroupNumber("CS-101")).thenReturn(false);
         when(specialtyRepository.findById(999L)).thenReturn(Optional.empty());
+//        when(groupRepository.existsByGroupNumber("CS-101")).thenReturn(false);
+
 
         // Act & Assert
         assertThrows(SpecialtyNotFoundException.class, () -> groupService.createGroup(request));

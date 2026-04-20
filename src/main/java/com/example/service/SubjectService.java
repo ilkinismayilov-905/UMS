@@ -53,13 +53,13 @@ public class SubjectService {
     public SubjectResponse createSubject(CreateSubjectRequest request) {
         log.info("Creating new subject");
 
-        if (subjectRepository.existsByName(request.getName())) {
-            throw new DuplicateUserException("Subject already exists with name: " + request.getName());
+        if (subjectRepository.existsByName(request.name())) {
+            throw new DuplicateUserException("Subject already exists with name: " + request.name());
         }
 
         Subject subject = Subject.builder()
-                .name(request.getName())
-                .credits(request.getCredits())
+                .name(request.name())
+                .credits(request.credits())
                 .build();
 
         Subject savedSubject = subjectRepository.save(subject);
@@ -74,7 +74,7 @@ public class SubjectService {
         Subject subject = subjectRepository.findById(id)
                 .orElseThrow(() -> new SubjectNotFoundException("Subject not found with id: " + id));
 
-        subject.setCredits(request.getCredits());
+        subject.setCredits(request.credits());
 
         Subject updatedSubject = subjectRepository.save(subject);
         log.info("Subject updated successfully with id: {}", updatedSubject.getId());

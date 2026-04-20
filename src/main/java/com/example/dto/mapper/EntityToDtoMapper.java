@@ -11,116 +11,116 @@ public class EntityToDtoMapper {
         if (user == null) {
             return null;
         }
-        return UserResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .role(user.getRole().name())
-                .isActive(user.getIsActive())
-                .build();
+        return new UserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getRole().name(),
+                user.getIsActive()
+        );
     }
 
     public StudentResponse toStudentResponse(Student student) {
         if (student == null) {
             return null;
         }
-        return StudentResponse.builder()
-                .id(student.getId())
-                .studentNumber(student.getStudentNumber())
-                .user(toUserResponse(student.getUser()))
-                .group(toGroupResponse(student.getGroup()))
-                .build();
+        return new StudentResponse(
+                student.getId(),
+                student.getStudentNumber(),
+                toUserResponse(student.getUser()),
+                toGroupResponse(student.getGroup())
+        );
     }
 
     public TeacherResponse toTeacherResponse(Teacher teacher) {
         if (teacher == null) {
             return null;
         }
-        return TeacherResponse.builder()
-                .id(teacher.getId())
-                .user(toUserResponse(teacher.getUser()))
-                .department(teacher.getDepartment())
-                .build();
+        return new TeacherResponse(
+                teacher.getId(),
+                toUserResponse(teacher.getUser()),
+                teacher.getDepartment()
+        );
     }
 
     public GroupResponse toGroupResponse(Group group) {
         if (group == null) {
             return null;
         }
-        return GroupResponse.builder()
-                .id(group.getId())
-                .groupNumber(group.getGroupNumber())
-                .specialty(toSpecialtyResponse(group.getSpecialty()))
-                .build();
+        return new GroupResponse(
+                group.getId(),
+                group.getGroupNumber(),
+                toSpecialtyResponse(group.getSpecialty())
+        );
     }
 
     public SpecialtyResponse toSpecialtyResponse(Specialty specialty) {
         if (specialty == null) {
             return null;
         }
-        return SpecialtyResponse.builder()
-                .id(specialty.getId())
-                .name(specialty.getName())
-                .build();
+        return new SpecialtyResponse(
+                specialty.getId(),
+                specialty.getName()
+        );
     }
 
     public SubjectResponse toSubjectResponse(Subject subject) {
         if (subject == null) {
             return null;
         }
-        return SubjectResponse.builder()
-                .id(subject.getId())
-                .name(subject.getName())
-                .credits(subject.getCredits())
-                .build();
+        return new SubjectResponse(
+                subject.getId(),
+                subject.getName(),
+                subject.getCredits()
+        );
     }
 
     public GradeResponse toGradeResponse(Grade grade) {
         if (grade == null) {
             return null;
         }
-        return GradeResponse.builder()
-                .id(grade.getId())
-                .student(toStudentResponse(grade.getStudent()))
-                .subject(toSubjectResponse(grade.getSubject()))
-                .teacher(toTeacherResponse(grade.getTeacher()))
-                .attendanceScore(grade.getAttendanceScore())
-                .seminarScore(grade.getSeminarScore())
-                .col1(grade.getCol1())
-                .col2(grade.getCol2())
-                .col3(grade.getCol3())
-                .examScore(grade.getExamScore())
-                .totalScore(grade.getTotalScore())
-                .status(grade.getStatus() != null ? grade.getStatus().name() : null)
-                .build();
+        return new GradeResponse(
+                grade.getId(),
+                toStudentResponse(grade.getStudent()),
+                toSubjectResponse(grade.getSubject()),
+                toTeacherResponse(grade.getTeacher()),
+                grade.getAttendanceScore(),
+                grade.getSeminarScore(),
+                grade.getCol1(),
+                grade.getCol2(),
+                grade.getCol3(),
+                grade.getExamScore(),
+                grade.getTotalScore(),
+                grade.getStatus() != null ? grade.getStatus().name() : null
+        );
     }
 
     public TeacherGroupSubjectResponse toTeacherGroupSubjectResponse(TeacherGroupSubject tgs) {
         if (tgs == null) {
             return null;
         }
-        return TeacherGroupSubjectResponse.builder()
-                .id(tgs.getId())
-                .teacher(toTeacherResponse(tgs.getTeacher()))
-                .group(toGroupResponse(tgs.getGroup()))
-                .subject(toSubjectResponse(tgs.getSubject()))
-                .build();
+        return new TeacherGroupSubjectResponse(
+                tgs.getId(),
+                toTeacherResponse(tgs.getTeacher()),
+                toGroupResponse(tgs.getGroup()),
+                toSubjectResponse(tgs.getSubject())
+        );
     }
 
     public AttendanceResponse toAttendanceResponse(Attendance attendance) {
         if (attendance == null) {
             return null;
         }
-        return AttendanceResponse.builder()
-                .id(attendance.getId())
-                .lessonId(attendance.getLesson().getId())
-                .student(toStudentResponse(attendance.getStudent()))
-                .status(attendance.getStatus().name())
-                .markedAt(attendance.getMarkedAt())
-                .lastModifiedAt(attendance.getLastModifiedAt())
-                .remarks(attendance.getRemarks())
-                .build();
+        return new AttendanceResponse(
+                attendance.getId(),
+                attendance.getLesson().getId(),
+                toStudentResponse(attendance.getStudent()),
+                attendance.getStatus().name(),
+                attendance.getMarkedAt(),
+                attendance.getLastModifiedAt(),
+                attendance.getRemarks()
+        );
     }
 }
 

@@ -55,12 +55,12 @@ public class TeacherService {
     public TeacherResponse createTeacher(CreateTeacherRequest request) {
         log.info("Creating new teacher");
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + request.getUserId()));
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + request.userId()));
 
         Teacher teacher = Teacher.builder()
                 .user(user)
-                .department(request.getDepartment())
+                .department(request.department())
                 .build();
 
         Teacher savedTeacher = teacherRepository.save(teacher);
@@ -75,7 +75,7 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + id));
 
-        teacher.setDepartment(request.getDepartment());
+        teacher.setDepartment(request.department());
 
         Teacher updatedTeacher = teacherRepository.save(teacher);
         log.info("Teacher updated successfully with id: {}", updatedTeacher.getId());

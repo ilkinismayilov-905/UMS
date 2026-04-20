@@ -39,6 +39,14 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
         return mapper.toStudentResponse(student);
     }
+    @Transactional(readOnly = true)
+    public StudentResponse getStudentByUserId(Long id) {
+        log.info("Fetching student with user id: {}", id);
+        Student student = studentRepository.findByUserId(id)
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with user id: " + id));
+        return mapper.toStudentResponse(student);
+    }
+
 
     @Transactional(readOnly = true)
     public StudentResponse getStudentByStudentNumber(String studentNumber) {
@@ -69,19 +77,19 @@ public class StudentService {
     public StudentResponse createStudent(CreateStudentRequest request) {
         log.info("Creating new student");
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + request.getUserId()));
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + request.userId()));
 
-        Group group = groupRepository.findById(request.getGroupId())
-                .orElseThrow(() -> new GroupNotFoundException("Group not found with id: " + request.getGroupId()));
+        Group group = groupRepository.findById(request.groupId())
+                .orElseThrow(() -> new GroupNotFoundException("Group not found with id: " + request.groupId()));
 
-        if (studentRepository.existsByStudentNumber(request.getStudentNumber())) {
-            throw new DuplicateStudentException("Student already exists with number: " + request.getStudentNumber());
+        if (studentRepository.existsByStudentNumber(request.studentNumber())) {
+            throw new DuplicateStudentException("Student already exists with number: " + request.studentNumber());
         }
 
         Student student = Student.builder()
                 .user(user)
-                .studentNumber(request.getStudentNumber())
+                .studentNumber(request.studentNumber())
                 .group(group)
                 .build();
 
@@ -97,8 +105,8 @@ public class StudentService {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
 
-        Group group = groupRepository.findById(request.getGroupId())
-                .orElseThrow(() -> new GroupNotFoundException("Group not found with id: " + request.getGroupId()));
+        Group group = groupRepository.findById(request.groupId())
+                .orElseThrow(() -> new GroupNotFoundException("Group not found with id: " + request.groupId()));
 
         student.setGroup(group);
 

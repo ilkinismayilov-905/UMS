@@ -8,28 +8,31 @@ import com.example.service.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AuthController.class)
+@ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private AuthenticationService authenticationService;
 
-    @Autowired
+    @InjectMocks
+    private AuthController authController;
+
+    private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private AuthenticationService authenticationService;
 
     private LoginRequest loginRequest;
     private RegisterRequest registerRequest;
@@ -37,33 +40,36 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-        loginRequest = LoginRequest.builder()
-                .email("user@school.com")
-                .password("Password123!")
-                .build();
+        objectMapper = new ObjectMapper();
+        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
 
-        registerRequest = RegisterRequest.builder()
-                .email("newuser@school.com")
-                .password("SecurePassword123!")
-                .firstName("John")
-                .lastName("Doe")
-                .role("TEACHER")
-                .build();
+        loginRequest = new LoginRequest(
+                "user@school.com",
+                "Password123!"
+        );
 
-        UserResponse userResponse = UserResponse.builder()
-                .id(1L)
-                .email("user@school.com")
-                .firstName("John")
-                .lastName("Doe")
-                .role("TEACHER")
-                .isActive(true)
-                .build();
+        registerRequest = new RegisterRequest(
+                "newuser@school.com",
+                "SecurePassword123!",
+                "John",
+                "Doe",
+                "TEACHER"
+        );
 
-        loginResponse = LoginResponse.builder()
-                .accessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
-                .tokenType("Bearer")
-                .user(userResponse)
-                .build();
+        UserResponse userResponse = new UserResponse(
+                1L,
+                "user@school.com",
+                "John",
+                "Doe",
+                "TEACHER",
+                true
+        );
+
+        loginResponse = new LoginResponse(
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                "Bearer",
+                userResponse
+        );
     }
 
     @Test
@@ -98,10 +104,10 @@ class AuthControllerTest {
     @Test
     void shouldReturnBadRequestWhenEmailIsBlank() throws Exception {
         // Arrange
-        LoginRequest invalidRequest = LoginRequest.builder()
-                .email("")
-                .password("Password123!")
-                .build();
+        LoginRequest invalidRequest = new LoginRequest(
+                "",
+                "Password123!"
+        );
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/auth/login")
@@ -113,10 +119,10 @@ class AuthControllerTest {
     @Test
     void shouldReturnBadRequestWhenPasswordIsBlank() throws Exception {
         // Arrange
-        LoginRequest invalidRequest = LoginRequest.builder()
-                .email("user@school.com")
-                .password("")
-                .build();
+        LoginRequest invalidRequest = new LoginRequest(
+                "user@school.com",
+                ""
+        );
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/auth/login")
@@ -128,10 +134,10 @@ class AuthControllerTest {
     @Test
     void shouldReturnBadRequestWhenEmailIsInvalid() throws Exception {
         // Arrange
-        LoginRequest invalidRequest = LoginRequest.builder()
-                .email("invalid-email")
-                .password("Password123!")
-                .build();
+        LoginRequest invalidRequest = new LoginRequest(
+                "invalid-email",
+                "Password123!"
+        );
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/auth/login")
@@ -143,13 +149,13 @@ class AuthControllerTest {
     @Test
     void shouldReturnBadRequestWhenRegisteringWithMissingFirstName() throws Exception {
         // Arrange
-        RegisterRequest invalidRequest = RegisterRequest.builder()
-                .email("newuser@school.com")
-                .password("SecurePassword123!")
-                .firstName("")
-                .lastName("Doe")
-                .role("TEACHER")
-                .build();
+        RegisterRequest invalidRequest = new RegisterRequest(
+                "newuser@school.com",
+                "SecurePassword123!",
+                "",
+                "Doe",
+                "TEACHER"
+        );
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/auth/register")
@@ -161,13 +167,13 @@ class AuthControllerTest {
     @Test
     void shouldReturnBadRequestWhenRegisteringWithMissingRole() throws Exception {
         // Arrange
-        RegisterRequest invalidRequest = RegisterRequest.builder()
-                .email("newuser@school.com")
-                .password("SecurePassword123!")
-                .firstName("John")
-                .lastName("Doe")
-                .role("")
-                .build();
+        RegisterRequest invalidRequest = new RegisterRequest(
+                "newuser@school.com",
+                "SecurePassword123!",
+                "John",
+                "Doe",
+                ""
+        );
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/auth/register")

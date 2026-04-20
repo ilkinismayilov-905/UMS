@@ -53,18 +53,18 @@ public class UserService {
     }
 
     public UserResponse createUser(CreateUserRequest request) {
-        log.info("Creating new user with email: {}", request.getEmail());
+        log.info("Creating new user with email: {}", request.email());
 
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateUserException("User already exists with email: " + request.getEmail());
+        if (userRepository.existsByEmail(request.email())) {
+            throw new DuplicateUserException("User already exists with email: " + request.email());
         }
 
         User user = User.builder()
-                .email(request.getEmail())
-                .password(request.getPassword()) // TODO: Encode password with BCrypt
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .role(Role.valueOf(request.getRole().toUpperCase()))
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password())) // TODO: Encode password with BCrypt
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .role(Role.valueOf(request.role().toUpperCase()))
                 .isActive(true)
                 .build();
 
@@ -80,10 +80,10 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        if (request.getIsActive() != null) {
-            user.setIsActive(request.getIsActive());
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        if (request.isActive() != null) {
+            user.setIsActive(request.isActive());
         }
 
         User updatedUser = userRepository.save(user);
