@@ -81,8 +81,8 @@ class AttendanceControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/attendance/mark")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(markAttendanceRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(markAttendanceRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status").value("ABSENT"))
                 .andExpect(jsonPath("$.remarks").value("Late arrival"));
@@ -103,8 +103,8 @@ class AttendanceControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/attendance/mark")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(revertRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(revertRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.warning").value(true))
                 .andExpect(jsonPath("$.currentStatus").value("ABSENT"))
@@ -128,7 +128,7 @@ class AttendanceControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/attendance/student/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].status").value("ABSENT"));
     }
@@ -141,7 +141,7 @@ class AttendanceControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/attendance/lesson/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].status").value("ABSENT"));
     }
@@ -158,8 +158,8 @@ class AttendanceControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/attendance/mark")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -175,8 +175,8 @@ class AttendanceControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/attendance/mark")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -192,8 +192,8 @@ class AttendanceControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/attendance/mark")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -204,6 +204,3 @@ class AttendanceControllerTest {
 //                .andExpect(status().isUnauthorized());
 //    }
 }
-
-
-
