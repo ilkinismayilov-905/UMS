@@ -11,6 +11,7 @@ import com.example.entity.Teacher;
 import com.example.enums.GradeStatus;
 import com.example.exception.GradeNotFoundException;
 import com.example.exception.InvalidGradeValueException;
+import com.example.exception.StudentFailedDueToAbsenceException;
 import com.example.exception.StudentNotFoundException;
 import com.example.exception.SubjectNotFoundException;
 import com.example.exception.TeacherNotFoundException;
@@ -35,6 +36,7 @@ public class GradeService {
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
     private final GradeMapper mapper;
+    private final AttendanceTrackingService attendanceTrackingService;
 
     @Transactional(readOnly = true)
     public GradeResponse getGradeById(Long id) {
@@ -83,6 +85,9 @@ public class GradeService {
         Teacher teacher = teacherRepository.findById(request.teacherId())
                 .orElseThrow(() -> new TeacherNotFoundException("Teacher not found with id: " + request.teacherId()));
 
+        // Validate that student has not failed due to absences
+        validateStudentNotFailedDueToAbsence(student, subject);
+
         validateGradeValues(request);
 
         Grade grade = new Grade();
@@ -112,6 +117,9 @@ public class GradeService {
 
         Grade grade = gradeRepository.findById(id)
                 .orElseThrow(() -> new GradeNotFoundException("Grade not found with id: " + id));
+
+        // Validate that student has not failed due to absences
+        validateStudentNotFailedDueToAbsence(grade.getStudent(), grade.getSubject());
 
         validateGradeValues(request);
 
@@ -205,5 +213,18 @@ public class GradeService {
         if (totalScore <= 50) return GradeStatus.FAILED_BY_TOTAL;
         if (examScore <= 17) return GradeStatus.FAILED_BY_EXAM;
         return GradeStatus.PENDING;
+    }
+
+    /**
+     * Validate that student has not failed due to absence exceedance in the subject
+     */
+    private void validateStudentNotFailedDueToAbsence(Student student, Subject subject) {
+        if (attendanceTrackingService.hasStudentFailedDueToAbsence(student, subject)) {
+            log.warn("Attempt to grade student id: {} who has failed due to absences in subject id: {}", 
+                    student.getId(), subject.getId());
+            throw new StudentFailedDueToAbsenceException(
+                    "Cannot assign grade to student with id: " + student.getId() + 
+                    " as they have exceeded the absence limit for subject with id: " + subject.getId());
+        }
     }
 }

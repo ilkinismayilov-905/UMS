@@ -97,6 +97,30 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handle 422 Unprocessable Entity exceptions (Business logic violations)
+     */
+    @ExceptionHandler({
+            StudentFailedDueToAbsenceException.class,
+            AbsenceLimitExceededException.class
+    })
+    public ResponseEntity<ErrorResponse> handleUnprocessableEntity(
+            RuntimeException ex,
+            HttpServletRequest request) {
+
+        log.warn("Unprocessable entity: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .error("Unprocessable Entity")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
+    }
+
+    /**
      * Handle 401 Unauthorized exceptions
      */
     @ExceptionHandler(InvalidTokenException.class)
