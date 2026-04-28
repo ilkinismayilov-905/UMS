@@ -42,6 +42,9 @@ class GradeServiceTest {
     @Mock
     private GradeMapper mapper;
 
+    @Mock
+    private AttendanceTrackingService attendanceTrackingService;
+
     @InjectMocks
     private GradeService gradeService;
 
@@ -172,6 +175,10 @@ class GradeServiceTest {
                 .totalScore(71)
                 .status("PASSED")
                 .build();
+
+        // Mock AttendanceTrackingService with lenient mode to avoid unnecessary stubbing errors
+        lenient().when(attendanceTrackingService.hasStudentFailedDueToAbsence(any(Student.class), any(Subject.class)))
+                .thenReturn(false);
     }
 
     @Test

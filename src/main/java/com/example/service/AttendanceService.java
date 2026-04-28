@@ -32,6 +32,7 @@ public class AttendanceService {
     private final UserRepository userRepository;
     private final TeacherGroupSubjectRepository tgsRepository;
     private final AttendanceMapper mapper;
+    private final AttendanceTrackingService attendanceTrackingService;
 
     private static final int ALLOWED_ABSENT_TO_PRESENT_MINUTES = 15;
 
@@ -90,19 +91,25 @@ public class AttendanceService {
                     .build();
 
             Attendance savedAttendance = attendanceRepository.save(attendance);
+            
+            // If marking as ABSENT, track the absence
+            if (mapRequestStatusToEntity(request.status()) == AttendanceStatus.ABSENT) {
+                attendanceTrackingService.trackAbsence(student, lesson.getTeacherGroupSubject().getSubject());
+            }
+            
             log.info("Attendance marked for student id: {} as: {}", request.studentId(), request.status());
             return mapper.toAttendanceResponse(savedAttendance);
         }
 
         // Existing attendance record - handle update with 15-minute rule
-        return handleAttendanceUpdate(attendance, request, lesson, now);
+        return handleAttendanceUpdate(attendance, request, lesson, now, student);
     }
 
     /**
      * Handle updating existing attendance with 15-minute rule for ABSENT->PRESENT
      */
     private Object handleAttendanceUpdate(Attendance attendance, MarkAttendanceRequest request, 
-                                         Lesson lesson, LocalDateTime now) {
+                                         Lesson lesson, LocalDateTime now, Student student) {
         
         AttendanceStatus newStatus = mapRequestStatusToEntity(request.status());
         AttendanceStatus currentStatus = attendance.getStatus();
@@ -125,6 +132,9 @@ public class AttendanceService {
                         attendance.getId()
                 );
             }
+        } else if (currentStatus == AttendanceStatus.PRESENT && newStatus == AttendanceStatus.ABSENT) {
+            // Changing from PRESENT to ABSENT - track the absence
+            attendanceTrackingService.trackAbsence(student, lesson.getTeacherGroupSubject().getSubject());
         }
 
         // Update attendance

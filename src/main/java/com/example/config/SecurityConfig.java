@@ -72,8 +72,8 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers(
-                                "/api/v1/auth/login",
-                                "/api/v1/auth/register"
+                                "/api/v1/auth/register",
+                                "/api/v1/auth/refresh"
                         ).permitAll()
 //                      .requestMatchers(HttpMethod.GET, "/api/v1/users/**").hasAnyRole("SUPER_ADMIN", "TEACHER", "STUDENT")
                         .requestMatchers("/api/v1/users/**").hasRole("SUPER_ADMIN")

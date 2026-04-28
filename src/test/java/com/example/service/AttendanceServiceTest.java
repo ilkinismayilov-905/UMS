@@ -47,6 +47,9 @@ class AttendanceServiceTest {
     @Mock
     private AttendanceMapper mapper;
 
+    @Mock
+    private AttendanceTrackingService attendanceTrackingService;
+
     @InjectMocks
     private AttendanceService attendanceService;
 
