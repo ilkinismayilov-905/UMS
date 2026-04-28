@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.dto.mapper.EntityToDtoMapper;
+import com.example.dto.mapper.AttendanceMapper;
 import com.example.dto.request.MarkAttendanceRequest;
 import com.example.dto.response.AttendanceResponse;
 import com.example.dto.response.AttendanceWarningResponse;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class AttendanceService {
     private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
     private final TeacherGroupSubjectRepository tgsRepository;
-    private final EntityToDtoMapper mapper;
+    private final AttendanceMapper mapper;
 
     private static final int ALLOWED_ABSENT_TO_PRESENT_MINUTES = 15;
 
@@ -62,7 +63,9 @@ public class AttendanceService {
         Teacher teacher = getAuthenticatedTeacher();
         validateTeacherAssignment(teacher, lesson.getTeacherGroupSubject());
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Baku"));
+        log.info("Current Time: {}, Lesson Start Time: {}", now, lesson.getStartTime());
+        System.out.println("Current time in Asia/Baku: " + now);
 
         // Check lesson timing constraints
         if (lesson.hasLessonEnded(now)) {
