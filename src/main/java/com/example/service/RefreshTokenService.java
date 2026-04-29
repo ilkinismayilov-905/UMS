@@ -15,7 +15,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
@@ -23,11 +22,7 @@ public class RefreshTokenService {
     @Value("${app.jwt.refresh-expiration:604800000}")
     private long refreshTokenExpirationMs;
 
-    /**
-     * Create or update refresh token for user.
-     * If token exists, delete old one and create new one.
-     * If token doesn't exist, create new one.
-     */
+    @Transactional
     public String createOrUpdateRefreshToken(User user) {
         log.info("Creating/updating refresh token for user: {}", user.getEmail());
 
@@ -52,33 +47,25 @@ public class RefreshTokenService {
         return tokenValue;
     }
 
-    /**
-     * Validate refresh token exists and not expired
-     */
+    @Transactional(readOnly = true)
     public Optional<RefreshToken> validateRefreshToken(String token) {
         return refreshTokenRepository.findByToken(token)
                 .filter(RefreshToken::isValid);
     }
 
-    /**
-     * Get refresh token for user
-     */
+    @Transactional(readOnly = true)
     public Optional<RefreshToken> getRefreshToken(User user) {
         return refreshTokenRepository.findByUser(user)
                 .filter(RefreshToken::isValid);
     }
 
-    /**
-     * Delete refresh token for user
-     */
+    @Transactional
     public void deleteRefreshToken(User user) {
         log.info("Deleting refresh token for user: {}", user.getEmail());
         refreshTokenRepository.deleteByUser(user);
     }
 
-    /**
-     * Clean up expired tokens (called by scheduler)
-     */
+    @Transactional
     public void cleanupExpiredTokens() {
         LocalDateTime now = LocalDateTime.now();
         refreshTokenRepository.deleteExpiredTokens(now);

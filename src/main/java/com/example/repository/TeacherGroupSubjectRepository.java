@@ -2,6 +2,7 @@ package com.example.repository;
 
 import com.example.entity.Subject;
 import com.example.entity.TeacherGroupSubject;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +17,7 @@ public interface TeacherGroupSubjectRepository extends JpaRepository<TeacherGrou
 
     TeacherGroupSubject findByTeacherIdAndGroupIdAndSubjectId(Long teacherId, Long groupId, Long subjectId);
 
-    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"group", "subject"})
+    @EntityGraph(attributePaths = {"group", "subject"})
     List<TeacherGroupSubject> findAllByTeacherId(Long teacherId);
 
     /**

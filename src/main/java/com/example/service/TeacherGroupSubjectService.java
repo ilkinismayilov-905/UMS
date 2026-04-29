@@ -25,7 +25,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class TeacherGroupSubjectService {
 
     private final TeacherGroupSubjectRepository tgsRepository;
@@ -60,6 +59,7 @@ public class TeacherGroupSubjectService {
                 .toList();
     }
 
+    @Transactional
     public TeacherGroupSubjectResponse createTeacherGroupSubject(CreateTeacherGroupSubjectRequest request) {
         log.info("Creating new teacher group subject assignment");
 
@@ -88,6 +88,7 @@ public class TeacherGroupSubjectService {
         return mapper.toTeacherGroupSubjectResponse(savedTgs);
     }
 
+    @Transactional
     public void deleteTeacherGroupSubject(Long id) {
         log.info("Deleting teacher group subject with id: {}", id);
 

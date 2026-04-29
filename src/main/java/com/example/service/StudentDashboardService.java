@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class StudentDashboardService {
 
     private final StudentRepository studentRepository;
@@ -42,6 +41,7 @@ public class StudentDashboardService {
      * @return StudentProfileResponse containing student details
      * @throws StudentNotFoundException if student not found
      */
+    @Transactional(readOnly = true)
     public StudentProfileResponse getStudentProfile(Long userId) {
         log.info("Fetching profile for user ID: {}", userId);
 
@@ -63,6 +63,7 @@ public class StudentDashboardService {
      * @return List of SubjectAcademicStatusResponse containing grades and absences per subject
      * @throws StudentNotFoundException if student not found
      */
+    @Transactional(readOnly = true)
     public List<SubjectAcademicStatusResponse> getStudentAcademicStatus(Long userId) {
         log.info("Fetching academic status for user ID: {}", userId);
 
@@ -120,6 +121,7 @@ public class StudentDashboardService {
      * @return List of EnrolledSubjectResponse containing subjects the student is enrolled in
      * @throws StudentNotFoundException if student not found
      */
+    @Transactional(readOnly = true)
     public List<EnrolledSubjectResponse> getStudentEnrolledSubjects(Long userId) {
         log.info("Fetching enrolled subjects for user ID: {}", userId);
 

@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class SpecialtyService {
 
     private final SpecialtyRepository specialtyRepository;
@@ -49,6 +48,7 @@ public class SpecialtyService {
                 .toList();
     }
 
+    @Transactional
     public SpecialtyResponse createSpecialty(CreateSpecialtyRequest request) {
         log.info("Creating new specialty");
 
@@ -66,6 +66,7 @@ public class SpecialtyService {
         return mapper.toSpecialtyResponse(savedSpecialty);
     }
 
+    @Transactional
     public SpecialtyResponse updateSpecialty(Long id, UpdateSpecialtyRequest request) {
         log.info("Updating specialty with id: {}", id);
 
@@ -84,6 +85,7 @@ public class SpecialtyService {
         return mapper.toSpecialtyResponse(updatedSpecialty);
     }
 
+    @Transactional
     public void deleteSpecialty(Long id) {
         log.info("Deleting specialty with id: {}", id);
 

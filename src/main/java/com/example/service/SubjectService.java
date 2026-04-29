@@ -50,6 +50,7 @@ public class SubjectService {
                 .toList();
     }
 
+    @Transactional
     public SubjectResponse createSubject(CreateSubjectRequest request) {
         log.info("Creating new subject");
 
@@ -68,6 +69,7 @@ public class SubjectService {
         return mapper.toSubjectResponse(savedSubject);
     }
 
+    @Transactional
     public SubjectResponse updateSubject(Long id, UpdateSubjectRequest request) {
         log.info("Updating subject with id: {}", id);
 
@@ -82,6 +84,7 @@ public class SubjectService {
         return mapper.toSubjectResponse(updatedSubject);
     }
 
+    @Transactional
     public void deleteSubject(Long id) {
         log.info("Deleting subject with id: {}", id);
 

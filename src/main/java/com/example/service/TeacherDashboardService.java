@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class TeacherDashboardService {
 
     private final TeacherRepository teacherRepository;
@@ -33,6 +32,7 @@ public class TeacherDashboardService {
      * @param userId The authenticated user's ID
      * @return TeacherDashboardResponse containing profile and assignments
      */
+    @Transactional(readOnly = true)
     public TeacherDashboardResponse getTeacherDashboardData(Long userId) {
         log.info("Fetching dashboard data for user ID: {}", userId);
 
