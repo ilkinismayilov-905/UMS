@@ -15,4 +15,10 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     @Query("SELECT t FROM Teacher t JOIN FETCH t.user WHERE t.user.id = :userId")
     Optional<Teacher> findByUserIdWithDetails(@Param("userId") Long userId);
+
+    @Query("SELECT COUNT(t) FROM Teacher t")
+    long countTotalTeachers();
+
+    @Query("SELECT COUNT(DISTINCT t.department) FROM Teacher t")
+    long countDistinctDepartments();
 }

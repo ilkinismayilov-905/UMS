@@ -6,6 +6,7 @@ import com.example.dto.response.AttendanceResponse;
 import com.example.dto.response.AttendanceWarningResponse;
 import com.example.entity.*;
 import com.example.enums.AttendanceStatus;
+import com.example.enums.Department;
 import com.example.enums.Role;
 import com.example.exception.*;
 import com.example.repository.*;
@@ -77,7 +78,7 @@ class AttendanceServiceTest {
         teacher = Teacher.builder()
                 .id(1L)
                 .user(teacherUser)
-                .department("Mathematics")
+                .department(Department.MATHEMATICS)
                 .build();
 
         group = Group.builder()
@@ -216,7 +217,7 @@ class AttendanceServiceTest {
         Teacher otherTeacher = Teacher.builder()
                 .id(999L)
                 .user(teacherUser)
-                .department("Other")
+                .department(Department.OTHER)
                 .build();
 
         Lesson otherLesson = Lesson.builder()

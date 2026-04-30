@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.dto.request.CreateGradeRequest;
 import com.example.dto.request.UpdateGradeRequest;
 import com.example.dto.response.*;
+import com.example.enums.Department;
 import com.example.service.GradeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,7 @@ class GradeControllerTest {
                 1L,
                 new StudentResponse(1L, "STU001", null, null),
                 new SubjectResponse(1L, "Math", 3),
-                new TeacherResponse(1L, null, "Computer Science"),
+                new TeacherResponse(1L, null, Department.COMPUTER_SCIENCE),
                 8,
                 7,
                 6,
@@ -131,7 +132,7 @@ class GradeControllerTest {
                 1L,
                 new StudentResponse(1L, "STU001", null, null),
                 new SubjectResponse(1L, "Math", 3),
-                new TeacherResponse(1L, null, "Computer Science"),
+                new TeacherResponse(1L, null, Department.COMPUTER_SCIENCE),
                 9,
                 8,
                 7,

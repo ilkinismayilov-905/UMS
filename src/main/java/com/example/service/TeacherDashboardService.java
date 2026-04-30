@@ -72,7 +72,7 @@ public class TeacherDashboardService {
                 .firstName(teacher.getUser().getFirstName())
                 .lastName(teacher.getUser().getLastName())
                 .email(teacher.getUser().getEmail())
-                .department(teacher.getDepartment())
+                .department(teacher.getDepartment().name())
                 .assignedGroups(assignedGroups)
                 .assignedSubjects(assignedSubjects)
                 .build();

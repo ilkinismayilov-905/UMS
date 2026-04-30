@@ -30,6 +30,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
            "LEFT JOIN FETCH g.specialty sp " +
            "WHERE s.user.id = :userId")
     Optional<Student> findByUserIdWithDetails(@Param("userId") Long userId);
+
+    @Query("SELECT COUNT(s) FROM Student s")
+    long countTotalStudents();
+
+    @Query("SELECT COUNT(s) FROM Student s WHERE s.user.isActive = true")
+    long countActiveStudents();
 }
-
-

@@ -1,6 +1,6 @@
 package com.example.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import com.example.enums.Department;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
@@ -9,8 +9,7 @@ public record CreateTeacherRequest(
     @NotNull(message = "User ID cannot be null")
     Long userId,
 
-    @NotBlank(message = "Department cannot be blank")
-    String department
+    @NotNull(message = "Department cannot be null")
+    Department department
 ) {
 }
-

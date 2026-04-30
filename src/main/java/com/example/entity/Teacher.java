@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.enums.Department;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class Teacher {
     @EqualsAndHashCode.Exclude
     private User user;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String department;
+    private Department department;
 }
