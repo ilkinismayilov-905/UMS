@@ -24,7 +24,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class StudentService {
 
     private final StudentRepository studentRepository;
@@ -74,6 +73,7 @@ public class StudentService {
                 .toList();
     }
 
+    @Transactional
     public StudentResponse createStudent(CreateStudentRequest request) {
         log.info("Creating new student");
 
@@ -99,6 +99,7 @@ public class StudentService {
         return mapper.toStudentResponse(savedStudent);
     }
 
+    @Transactional
     public StudentResponse updateStudent(Long id, UpdateStudentRequest request) {
         log.info("Updating student with id: {}", id);
 
@@ -116,6 +117,7 @@ public class StudentService {
         return mapper.toStudentResponse(updatedStudent);
     }
 
+    @Transactional
     public void deleteStudent(Long id) {
         log.info("Deleting student with id: {}", id);
 

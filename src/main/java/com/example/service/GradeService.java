@@ -73,6 +73,7 @@ public class GradeService {
                 .toList();
     }
 
+    @Transactional
     public GradeResponse createGrade(CreateGradeRequest request) {
         log.info("Creating new grade");
 
@@ -112,6 +113,7 @@ public class GradeService {
         return mapper.toGradeResponse(savedGrade);
     }
 
+    @Transactional
     public GradeResponse updateGrade(Long id, UpdateGradeRequest request) {
         log.info("Updating grade with id: {}", id);
 
@@ -153,6 +155,7 @@ public class GradeService {
         return mapper.toGradeResponse(updatedGrade);
     }
 
+    @Transactional
     public void deleteGrade(Long id) {
         log.info("Deleting grade with id: {}", id);
 

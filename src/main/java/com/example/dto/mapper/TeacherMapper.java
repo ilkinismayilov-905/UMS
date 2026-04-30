@@ -9,4 +9,3 @@ public interface TeacherMapper {
 
     TeacherResponse toTeacherResponse(Teacher teacher);
 }
-

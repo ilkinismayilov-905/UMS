@@ -16,7 +16,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class PasswordResetTokenService {
 
     private final PasswordResetTokenRepository tokenRepository;
@@ -24,10 +23,7 @@ public class PasswordResetTokenService {
     @Value("${app.password-reset.expiration-minutes:60}")
     private int tokenExpirationMinutes;
 
-    /**
-     * Generate a new password reset token for the user.
-     * If user already has a valid token, delete it first and create new one.
-     */
+    @Transactional
     public String generateResetToken(User user) {
         log.info("Generating password reset token for user: {}", user.getEmail());
 
@@ -52,9 +48,7 @@ public class PasswordResetTokenService {
         return token;
     }
 
-    /**
-     * Validate and get the password reset token
-     */
+    @Transactional(readOnly = true)
     public PasswordResetToken validateAndGetToken(String token) {
         PasswordResetToken resetToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidPasswordTokenException("Invalid reset token"));
@@ -67,18 +61,14 @@ public class PasswordResetTokenService {
         return resetToken;
     }
 
-    /**
-     * Mark token as used after successful password reset
-     */
+    @Transactional
     public void markTokenAsUsed(PasswordResetToken resetToken) {
         resetToken.setIsUsed(true);
         tokenRepository.save(resetToken);
         log.info("Password reset token marked as used for user: {}", resetToken.getUser().getEmail());
     }
 
-    /**
-     * Clean up expired tokens (called by scheduler)
-     */
+    @Transactional
     public void cleanupExpiredTokens() {
         LocalDateTime now = LocalDateTime.now();
         tokenRepository.deleteExpiredTokens(now);

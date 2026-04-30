@@ -22,7 +22,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
@@ -49,6 +48,7 @@ public class AttendanceService {
      * 7. If lesson is finished, no changes allowed
      * 8. If lesson not started yet, no changes allowed
      */
+    @Transactional
     public Object markAttendance(MarkAttendanceRequest request) {
         log.info("Marking attendance for student id: {} in lesson id: {}", request.studentId(), request.lessonId());
 

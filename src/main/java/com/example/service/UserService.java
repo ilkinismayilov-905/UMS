@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -52,6 +51,7 @@ public class UserService {
                 .toList();
     }
 
+    @Transactional
     public UserResponse createUser(CreateUserRequest request) {
         log.info("Creating new user with email: {}", request.email());
 
@@ -74,6 +74,7 @@ public class UserService {
         return mapper.toUserResponse(savedUser);
     }
 
+    @Transactional
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         log.info("Updating user with id: {}", id);
 
@@ -92,6 +93,7 @@ public class UserService {
         return mapper.toUserResponse(updatedUser);
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         log.info("Deleting user with id: {}", id);
 

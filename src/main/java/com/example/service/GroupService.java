@@ -21,7 +21,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class GroupService {
 
     private final GroupRepository groupRepository;
@@ -62,6 +61,7 @@ public class GroupService {
                 .toList();
     }
 
+    @Transactional
     public GroupResponse createGroup(CreateGroupRequest request) {
         log.info("Creating new group");
         if (groupRepository.existsByGroupNumber(request.groupNumber())) {
@@ -82,6 +82,7 @@ public class GroupService {
         return mapper.toGroupResponse(savedGroup);
     }
 
+    @Transactional
     public GroupResponse updateGroup(Long id, UpdateGroupRequest request) {
         log.info("Updating group with id: {}", id);
 
@@ -99,6 +100,7 @@ public class GroupService {
         return mapper.toGroupResponse(updatedGroup);
     }
 
+    @Transactional
     public void deleteGroup(Long id) {
         log.info("Deleting group with id: {}", id);
 

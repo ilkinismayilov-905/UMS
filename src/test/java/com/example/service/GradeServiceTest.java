@@ -5,6 +5,7 @@ import com.example.dto.request.CreateGradeRequest;
 import com.example.dto.request.UpdateGradeRequest;
 import com.example.dto.response.*;
 import com.example.entity.*;
+import com.example.enums.Department;
 import com.example.enums.GradeStatus;
 import com.example.enums.Role;
 import com.example.exception.*;
@@ -97,7 +98,7 @@ class GradeServiceTest {
         teacher = Teacher.builder()
                 .id(1L)
                 .user(teacherUser)
-                .department("Computer Science")
+                .department(Department.COMPUTER_SCIENCE)
                 .build();
 
         grade = Grade.builder()
@@ -152,7 +153,7 @@ class GradeServiceTest {
         teacherRes = TeacherResponse.builder()
                 .id(1L)
                 .user(teacherUserRes)
-                .department("Computer Science")
+                .department(Department.COMPUTER_SCIENCE)
                 .build();
 
         subjectRes = SubjectResponse.builder()

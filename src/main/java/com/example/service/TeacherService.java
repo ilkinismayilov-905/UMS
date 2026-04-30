@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class TeacherService {
 
     private final TeacherRepository teacherRepository;
@@ -52,6 +51,7 @@ public class TeacherService {
                 .toList();
     }
 
+    @Transactional
     public TeacherResponse createTeacher(CreateTeacherRequest request) {
         log.info("Creating new teacher");
 
@@ -69,6 +69,7 @@ public class TeacherService {
         return mapper.toTeacherResponse(savedTeacher);
     }
 
+    @Transactional
     public TeacherResponse updateTeacher(Long id, UpdateTeacherRequest request) {
         log.info("Updating teacher with id: {}", id);
 
@@ -83,6 +84,7 @@ public class TeacherService {
         return mapper.toTeacherResponse(updatedTeacher);
     }
 
+    @Transactional
     public void deleteTeacher(Long id) {
         log.info("Deleting teacher with id: {}", id);
 

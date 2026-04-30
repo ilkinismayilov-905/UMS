@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class AuthenticationService {
 
     private final UserRepository userRepository;
@@ -42,6 +41,7 @@ public class AuthenticationService {
     private final PasswordResetTokenService passwordResetTokenService;
     private final RefreshTokenService refreshTokenService;
 
+    @Transactional
     public LoginResponse login(LoginRequest request) {
         log.info("Attempting login for email: {}", request.email());
 
@@ -63,6 +63,7 @@ public class AuthenticationService {
         return LoginResponse.of(accessToken, refreshToken, userResponse);
     }
 
+    @Transactional
     public LoginResponse register(RegisterRequest request) {
         log.info("Attempting registration for email: {}", request.email());
 
@@ -82,6 +83,8 @@ public class AuthenticationService {
         User savedUser = userRepository.save(user);
         log.info("User registered successfully: {}", request.email());
 
+        emailService.sendRegisterConfirmationEmail(savedUser.getEmail(), savedUser.getFirstName());
+
         String accessToken = jwtTokenProvider.generateTokenFromEmail(savedUser.getEmail());
         // Store refresh token in database
         String refreshToken = refreshTokenService.createOrUpdateRefreshToken(savedUser);
@@ -96,6 +99,7 @@ public class AuthenticationService {
      *
      * @throws InvalidTokenException refresh token etibarsız və ya tip yanlışdırsa
      */
+    @Transactional
     public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
         String token = request.refreshToken();
         log.info("Refresh token request received");
@@ -128,6 +132,7 @@ public class AuthenticationService {
     /**
      * Step 1: Initiate password change - send verification code to email
      */
+    @Transactional
     public PasswordResetTokenResponse initiatePasswordChange(Authentication authentication) {
         String email = authentication.getName();
         log.info("Password change initiated for email: {}", email);
@@ -157,6 +162,7 @@ public class AuthenticationService {
     /**
      * Step 2: Verify if the token is valid
      */
+    @Transactional(readOnly = true)
     public TokenVerificationResponse verifyPasswordResetToken(String token) {
         log.info("Verifying password reset token");
 
@@ -171,6 +177,7 @@ public class AuthenticationService {
     /**
      * Step 3: Reset password with verified token
      */
+    @Transactional
     public ChangePasswordResponse resetPassword(ResetPasswordRequest request) {
         log.info("Password reset requested with token");
 

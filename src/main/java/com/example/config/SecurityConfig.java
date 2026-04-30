@@ -72,6 +72,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers(
+                                "/api/v1/auth/login",
                                 "/api/v1/auth/register",
                                 "/api/v1/auth/refresh"
                         ).permitAll()
@@ -84,10 +85,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/subjects/**").hasAnyRole("SUPER_ADMIN", "TEACHER")
                         .requestMatchers("/api/v1/grades/**").hasAnyRole("SUPER_ADMIN", "TEACHER")
                         .requestMatchers("/api/v1/teacher-group-subjects/**").hasAnyRole("SUPER_ADMIN", "TEACHER")
+                        .requestMatchers("/api/dashboard/student/**").hasRole("STUDENT")
+                        .requestMatchers("/api/v1/teacher/dashboard/**").hasRole("TEACHER")
+                        .requestMatchers("/api/v1/admin/dashboard/**").hasRole("SUPER_ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 }
-
