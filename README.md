@@ -109,3 +109,15 @@ Subject ←── Grade ──→ Student + Teacher
 - Short-lived access tokens are renewed via the refresh token endpoint
 - Password changes require email verification before taking effect
 - Soft-delete: deactivated users are marked with `isActive = false`
+
+
+## Our Team
+
+- **Ilkin Ismayilov** — https://www.linkedin.com/in/ilkin-ismayilov2/
+- **Yaqut Rasulbayli** — https://www.linkedin.com/in/yagut-rasulbayli-733417401/
+- **Shabnam Muradova** — https://www.linkedin.com/in/shebnem-muradova/
+
+
+## Github Repository
+
+- [Manageable-Uni Backend](https://github.com/ilkinismayilov-905/UMS)

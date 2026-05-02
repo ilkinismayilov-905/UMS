@@ -22,7 +22,7 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("noreply@lms.com");
             message.setTo(toEmail);
-            message.setSubject("Password Reset Request - LMS System");
+            message.setSubject("Password Reset Request - UMS System");
             message.setText(buildPasswordResetEmailBody(resetLink, resetToken));
 
             mailSender.send(message);

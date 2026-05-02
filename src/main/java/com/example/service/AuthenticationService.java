@@ -52,9 +52,8 @@ public class AuthenticationService {
         String accessToken = jwtTokenProvider.generateToken(authentication);
 
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        // Store or update refresh token in database
         String refreshToken = refreshTokenService.createOrUpdateRefreshToken(user);
 
         UserResponse userResponse = mapper.toUserResponse(user);
@@ -181,7 +180,6 @@ public class AuthenticationService {
     public ChangePasswordResponse resetPassword(ResetPasswordRequest request) {
         log.info("Password reset requested with token");
 
-        // Validate token
         PasswordResetToken resetToken = passwordResetTokenService.validateAndGetToken(request.token());
 
         // Validate password match
@@ -196,13 +194,11 @@ public class AuthenticationService {
             throw new InvalidPasswordException("Password must be at least 6 characters long");
         }
 
-        // Update password
         User user = resetToken.getUser();
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
         log.info("Password updated for user: {}", user.getEmail());
 
-        // Mark token as used
         passwordResetTokenService.markTokenAsUsed(resetToken);
 
         // Send confirmation email

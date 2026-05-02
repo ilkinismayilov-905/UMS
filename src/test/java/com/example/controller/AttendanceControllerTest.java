@@ -112,13 +112,6 @@ class AttendanceControllerTest {
                 .andExpect(jsonPath("$.message").exists());
     }
 
-//    @Test
-//    void shouldReturnForbiddenWhenStudentTriesToMarkAttendance() throws Exception {
-//        mockMvc.perform(post("/api/v1/attendance/mark")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(markAttendanceRequest)))
-//                .andExpect(status().isForbidden());
-//    }
 
     @Test
     void shouldGetStudentAttendanceSuccessfully() throws Exception {
@@ -197,10 +190,4 @@ class AttendanceControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    public void shouldReturnUnauthorizedWhenAccessingWithoutToken() throws Exception {
-//        mockMvc.perform(get("/api/v1/attendance/student/1")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isUnauthorized());
-//    }
 }

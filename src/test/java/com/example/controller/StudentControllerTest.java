@@ -135,13 +135,6 @@ class StudentControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    public void shouldReturnUnauthorizedWhenAccessingWithoutToken() throws Exception {
-//        // Act & Assert
-//        mockMvc.perform(get("/api/v1/students")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isUnauthorized());
-//    }
 }
 
 

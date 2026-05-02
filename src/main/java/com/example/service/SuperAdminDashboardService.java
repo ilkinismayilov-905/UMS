@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class DashboardService {
+public class SuperAdminDashboardService {
 
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;

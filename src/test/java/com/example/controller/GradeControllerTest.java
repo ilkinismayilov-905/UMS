@@ -231,22 +231,6 @@ class GradeControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    void shouldReturnForbiddenWhenStudentTriesToCreateGrade() throws Exception {
-//        // Act & Assert
-//        mockMvc.perform(post("/api/v1/grades")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(createGradeRequest)))
-//                .andExpect(status().isForbidden());
-//    }
-//
-//    @Test
-//    public void shouldReturnUnauthorizedWhenAccessingWithoutToken() throws Exception {
-//        // Act & Assert
-//        mockMvc.perform(get("/api/v1/grades")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isUnauthorized());
-//    }
 }
 
 

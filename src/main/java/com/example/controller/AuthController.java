@@ -37,10 +37,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Refresh token ilə yeni access token + yeni refresh token al.
-     * Bu endpoint yalnız refresh token qəbul edir — access token ilə çağırılarsa 400 xəta verir.
-     */
+
     @PostMapping("/refresh")
     public ResponseEntity<RefreshTokenResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
         RefreshTokenResponse response = authenticationService.refreshToken(request);

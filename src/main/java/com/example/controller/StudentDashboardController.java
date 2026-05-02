@@ -26,13 +26,6 @@ public class StudentDashboardController {
 
     /**
      * Get the authenticated student's profile information
-     *
-     * Endpoint: GET /api/dashboard/student/profile
-     * Security: STUDENT role required
-     * Returns: Student's first name, last name, email, group number, student number, and major/specialty
-     *
-     * @param authentication Spring Security authentication containing the authenticated user
-     * @return StudentProfileResponse with student profile information
      */
     @GetMapping("/profile")
     public ResponseEntity<StudentProfileResponse> getStudentProfile(Authentication authentication) {
@@ -50,13 +43,6 @@ public class StudentDashboardController {
 
     /**
      * Get the authenticated student's academic status (grades and absences by subject)
-     *
-     * Endpoint: GET /api/dashboard/student/academic-status
-     * Security: STUDENT role required
-     * Returns: List where each item contains subject name, list of grades, and total absences
-     *
-     * @param authentication Spring Security authentication containing the authenticated user
-     * @return List of SubjectAcademicStatusResponse with subject name, grades, and absences
      */
     @GetMapping("/academic-status")
     public ResponseEntity<List<SubjectAcademicStatusResponse>> getStudentAcademicStatus(Authentication authentication) {
@@ -74,13 +60,6 @@ public class StudentDashboardController {
 
     /**
      * Get the authenticated student's enrolled subjects
-     *
-     * Endpoint: GET /api/dashboard/student/subjects
-     * Security: STUDENT role required
-     * Returns: List of subjects the student is currently enrolled in
-     *
-     * @param authentication Spring Security authentication containing the authenticated user
-     * @return List of EnrolledSubjectResponse containing enrolled subjects
      */
     @GetMapping("/subjects")
     public ResponseEntity<List<EnrolledSubjectResponse>> getStudentEnrolledSubjects(Authentication authentication) {
