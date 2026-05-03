@@ -78,7 +78,7 @@ class AttendanceServiceTest {
         teacher = Teacher.builder()
                 .id(1L)
                 .user(teacherUser)
-                .department(Department.MATHEMATICS)
+                .department(Department.DESIGN)
                 .build();
 
         group = Group.builder()

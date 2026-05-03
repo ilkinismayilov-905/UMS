@@ -57,12 +57,12 @@ class TeacherServiceTest {
         teacher = Teacher.builder()
                 .id(10L)
                 .user(user)
-                .department(Department.MATHEMATICS)
+                .department(Department.DESIGN)
                 .build();
 
         teacherResponse = TeacherResponse.builder()
                 .id(10L)
-                .department(Department.MATHEMATICS)
+                .department(Department.DESIGN)
                 // Digər sahələri ehtiyac olduqca əlavə edə bilərsiniz
                 .build();
     }
@@ -139,7 +139,7 @@ class TeacherServiceTest {
         // Arrange
         CreateTeacherRequest request = mock(CreateTeacherRequest.class);
         when(request.userId()).thenReturn(1L);
-        when(request.department()).thenReturn(Department.MATHEMATICS);
+        when(request.department()).thenReturn(Department.DESIGN);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
@@ -173,17 +173,17 @@ class TeacherServiceTest {
     void shouldUpdateTeacherSuccessfully() {
         // Arrange
         UpdateTeacherRequest request = mock(UpdateTeacherRequest.class);
-        when(request.department()).thenReturn(Department.PHYSICS); // Fərqli bir departament
+        when(request.department()).thenReturn(Department.DIGITAL_ECONOMY); // Fərqli bir departament
 
         Teacher updatedTeacher = Teacher.builder()
                 .id(10L)
                 .user(user)
-                .department(Department.PHYSICS)
+                .department(Department.DIGITAL_ECONOMY)
                 .build();
 
         TeacherResponse updatedResponse = TeacherResponse.builder()
                 .id(10L)
-                .department(Department.PHYSICS)
+                .department(Department.DIGITAL_ECONOMY)
                 .build();
 
         when(teacherRepository.findById(10L)).thenReturn(Optional.of(teacher));
@@ -195,7 +195,7 @@ class TeacherServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(Department.PHYSICS, result.department()); // Departamentin dəyişdiyini yoxlayırıq
+        assertEquals(Department.DIGITAL_ECONOMY, result.department()); // Departamentin dəyişdiyini yoxlayırıq
         verify(teacherRepository, times(1)).findById(10L);
         verify(teacherRepository, times(1)).save(any(Teacher.class));
     }

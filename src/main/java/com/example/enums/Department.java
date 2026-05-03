@@ -1,13 +1,13 @@
 package com.example.enums;
 
 public enum Department {
-    COMPUTER_SCIENCE,
-    MATHEMATICS,
-    PHYSICS,
-    CHEMISTRY,
-    BIOLOGY,
-    LITERATURE,
-    HISTORY,
     ENGINEERING,
+    DIGITAL_ECONOMY,
+    DESIGN,
+    INFORMATION_TECHNOLOGY,
+    BUSINESS_ADMINISTRATION,
+    LAW,
+    MEDICINE,
+    EDUCATION,
     OTHER
 }

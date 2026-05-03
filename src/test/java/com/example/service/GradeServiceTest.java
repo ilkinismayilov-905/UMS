@@ -88,7 +88,7 @@ class GradeServiceTest {
         teacher = Teacher.builder()
                 .id(1L)
                 .user(teacherUser)
-                .department(Department.COMPUTER_SCIENCE)
+                .department(Department.EDUCATION)
                 .build();
 
         grade = Grade.builder()

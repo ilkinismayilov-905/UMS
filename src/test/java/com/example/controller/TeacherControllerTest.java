@@ -56,9 +56,9 @@ class TeacherControllerTest {
                 true
         );
 
-        teacherResponse = new TeacherResponse(1L, userResponse, Department.COMPUTER_SCIENCE);
-        createTeacherRequest = new CreateTeacherRequest(1L, Department.COMPUTER_SCIENCE);
-        updateTeacherRequest = new UpdateTeacherRequest(Department.MATHEMATICS);
+        teacherResponse = new TeacherResponse(1L, userResponse, Department.ENGINEERING);
+        createTeacherRequest = new CreateTeacherRequest(1L, Department.ENGINEERING);
+        updateTeacherRequest = new UpdateTeacherRequest(Department.DESIGN);
     }
 
     @Test
@@ -72,7 +72,7 @@ class TeacherControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].department").value("COMPUTER_SCIENCE"));
+                .andExpect(jsonPath("$[0].department").value("ENGINEERING"));
     }
 
     @Test
@@ -85,7 +85,7 @@ class TeacherControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.department").value("COMPUTER_SCIENCE"));
+                .andExpect(jsonPath("$.department").value("ENGINEERING"));
     }
 
     @Test
@@ -110,7 +110,7 @@ class TeacherControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTeacherRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.department").value("COMPUTER_SCIENCE"));
+                .andExpect(jsonPath("$.department").value("ENGINEERING"));
     }
 
     @Test
@@ -118,7 +118,7 @@ class TeacherControllerTest {
         // Arrange
         TeacherResponse updatedResponse = new TeacherResponse(1L,
                 new UserResponse(1L, "teacher@school.com", "Jane", "Smith", "TEACHER", true),
-                Department.MATHEMATICS);
+                Department.DESIGN);
         when(teacherService.updateTeacher(eq(1L), any(UpdateTeacherRequest.class))).thenReturn(updatedResponse);
 
         // Act & Assert
@@ -126,7 +126,7 @@ class TeacherControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateTeacherRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.department").value("MATHEMATICS"));
+                .andExpect(jsonPath("$.department").value("DESIGN"));
     }
 
     @Test
@@ -143,7 +143,7 @@ class TeacherControllerTest {
     @Test
     void shouldReturnBadRequestWhenCreatingTeacherWithNullUserId() throws Exception {
         // Arrange
-        CreateTeacherRequest invalidRequest = new CreateTeacherRequest(null, Department.COMPUTER_SCIENCE);
+        CreateTeacherRequest invalidRequest = new CreateTeacherRequest(null, Department.ENGINEERING);
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/teachers")

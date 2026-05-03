@@ -43,7 +43,7 @@ class TeacherGroupSubjectControllerTest {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(teacherGroupSubjectController).build();
 
-        TeacherResponse teacherResponse = new TeacherResponse(1L, null, Department.COMPUTER_SCIENCE);
+        TeacherResponse teacherResponse = new TeacherResponse(1L, null, Department.ENGINEERING);
         GroupResponse groupResponse = new GroupResponse(1L, "651.21", new SpecialtyResponse(1L, "CS"));
         SubjectResponse subjectResponse = new SubjectResponse(1L, "Math", 3);
 
@@ -88,7 +88,7 @@ class TeacherGroupSubjectControllerTest {
         mockMvc.perform(get("/api/v1/teacher-group-subjects/teacher/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].teacher.department").value("COMPUTER_SCIENCE"));
+                .andExpect(jsonPath("$[0].teacher.department").value("ENGINEERING"));
     }
 
     @Test

@@ -64,7 +64,7 @@ class TeacherDashboardServiceTest {
         teacher = Teacher.builder()
                 .id(100L)
                 .user(teacherUser)
-                .department(Department.COMPUTER_SCIENCE)
+                .department(Department.ENGINEERING)
                 .build();
 
         group1 = Group.builder().id(10L).groupNumber("CS-101").build();
@@ -114,7 +114,7 @@ class TeacherDashboardServiceTest {
         assertEquals("Jane", result.firstName());
         assertEquals("Smith", result.lastName());
         assertEquals("teacher@school.com", result.email());
-        assertEquals("COMPUTER_SCIENCE", result.department());
+        assertEquals("ENGINEERING", result.department());
 
         // Qruplar təkrarlanmamalıdır (distinct işləməlidir)
         List<GroupDto> assignedGroups = result.assignedGroups();
